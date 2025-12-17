@@ -1,4 +1,4 @@
-package analytics
+package main
 
 import (
 	"log"
@@ -26,7 +26,6 @@ func main() {
 
 	pg := analytics.InitPGStorage(cfg)
 	rdb := analytics.InitRedis()
-
 	svc := analytics.InitAnalyticsService(pg, rdb)
 	processor := analytics.InitEventsProcessor(svc)
 	consumer := analytics.InitContentEventsConsumer(cfg, processor)

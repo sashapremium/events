@@ -11,10 +11,10 @@ import (
 )
 
 func InitRedis() *redis.Client {
-	addr := getenv(
-		"ANALYTICS_REDIS_ADDR", "localhost:6379")
-	pass := getenv("ANALYTICS_REDIS_PASSWORD", "")
-	dbStr := getenv("ANALYTICS_REDIS_DB", "0")
+	// Prefer generic env from docker-compose, keep backward compatibility.
+	addr := firstEnv("REDIS_ADDR", "ANALYTICS_REDIS_ADDR", "redis:6379")
+	pass := firstEnv("REDIS_PASSWORD", "ANALYTICS_REDIS_PASSWORD", "")
+	dbStr := firstEnv("REDIS_DB", "ANALYTICS_REDIS_DB", "0")
 
 	db, err := strconv.Atoi(dbStr)
 	if err != nil {
@@ -31,16 +31,18 @@ func InitRedis() *redis.Client {
 	defer cancel()
 
 	if err := rdb.Ping(ctx).Err(); err != nil {
-		log.Fatalf("ошибка подключения к Redis: %v", err)
+		log.Fatalf("ошибка подключения к Redis (%s): %v", addr, err)
 	}
 
 	return rdb
 }
 
-func getenv(key, def string) string {
-	v := os.Getenv(key)
-	if v == "" {
-		return def
+func firstEnv(primary, fallback, def string) string {
+	if v := os.Getenv(primary); v != "" {
+		return v
 	}
-	return v
+	if v := os.Getenv(fallback); v != "" {
+		return v
+	}
+	return def
 }

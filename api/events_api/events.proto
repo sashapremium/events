@@ -4,13 +4,14 @@ package content.service.v1;
 
 option go_package = "github.com/sashapremium/events/internal/pb/events_api;events_api";
 
-import "models/events_model.proto";
 import "google/api/annotations.proto";
+import "models/events_model.proto";
 
 service EventsService {
   rpc GetPost (GetPostRequest) returns (GetPostResponse) {
     option (google.api.http) = {
       get: "/api/v1/post/{id}"
+      body: "*"
     };
   }
 
