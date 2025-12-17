@@ -110,6 +110,9 @@ services:
       REDIS_ADDR: redis:6379
     volumes:
       - ./config:/config:ro
+    ports:
+      - "8082:8082"
+
     networks:
       - events-net
 

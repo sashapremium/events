@@ -4,8 +4,8 @@ package analytics.service.v1;
 
 option go_package = "github.com/sashapremium/events/internal/pb/analytics_api;analytics_api";
 
-import "google/api/annotations.proto";
-import "models/analytics_model.proto";
+import "api/google/api/annotations.proto";
+import "api/models/analytics_model.proto";
 
 service AnalyticsService {
   rpc GetPostStats(GetPostStatsRequest) returns (GetPostStatsResponse) {
