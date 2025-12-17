@@ -1,0 +1,17 @@
+# Binaries
+*.exe
+*.dll
+*.test
+
+# Build artifacts
+bin/
+coverage.out
+coverage.html
+
+# IDE
+.idea/
+.vscode/
+
+# Go cache
+*.log
+*.tmp

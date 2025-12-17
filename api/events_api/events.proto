@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package content.service.v1;
+
+option go_package = "github.com/sashapremium/events/internal/pb/events_api;events_api";
+
+import "models/events_model.proto";
+import "google/api/annotations.proto";
+
+service EventsService {
+  rpc GetPost (GetPostRequest) returns (GetPostResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/post/{id}"
+    };
+  }
+
+  rpc LikePost (LikePostRequest) returns (LikePostResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/post/{id}/like"
+      body: "*"
+    };
+  }
+
+  rpc RepostPost (RepostPostRequest) returns (RepostPostResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/post/{id}/repost"
+      body: "*"
+    };
+  }
+
+  rpc AddComment (AddCommentRequest) returns (AddCommentResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/post/{id}/comment"
+      body: "*"
+    };
+  }
+}
+
+message GetPostRequest {
+  uint64 id = 1;
+  string user_hash = 2;
+}
+
+message GetPostResponse {
+  content.models.v1.PostModel post = 1;
+  string status = 2;
+}
+
+message LikePostRequest {
+  uint64 id = 1;
+  string user_hash = 2;
+}
+message LikePostResponse { string status = 1; }
+
+message RepostPostRequest {
+  uint64 id = 1;
+  string user_hash = 2;
+}
+message RepostPostResponse { string status = 1; }
+
+message AddCommentRequest {
+  uint64 id = 1;
+  string user_hash = 2;
+  string text = 3;
+}
+message AddCommentResponse {
+  content.models.v1.CommentModel comment = 1;
+  string status = 2;
+}

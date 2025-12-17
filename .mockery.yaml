@@ -1,0 +1,11 @@
+with-expecter: true
+
+packages:
+  github.com/sashapremium/events/internal/services/analyticsService:
+    config:
+      inpackage: true
+      dir: internal/services/analyticsService
+      filename: "mock_{{.InterfaceName}}.go"
+    interfaces:
+      Storage: {}
+      Cache: {}

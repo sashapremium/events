@@ -1,0 +1,310 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "analytics_api/analytics.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "AnalyticsService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1/analytics/author/{authorId}": {
+      "get": {
+        "operationId": "AnalyticsService_GetAuthorStats",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetAuthorStatsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "authorId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "AnalyticsService"
+        ]
+      }
+    },
+    "/api/v1/analytics/post/{postId}": {
+      "get": {
+        "operationId": "AnalyticsService_GetPostStats",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetPostStatsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "fresh",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "AnalyticsService"
+        ]
+      }
+    },
+    "/api/v1/analytics/top": {
+      "get": {
+        "operationId": "AnalyticsService_GetTop",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetTopResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "metric",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "AnalyticsService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1AuthorStatsModel": {
+      "type": "object",
+      "properties": {
+        "authorId": {
+          "type": "string"
+        },
+        "posts": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "totalViews": {
+          "type": "string",
+          "format": "int64"
+        },
+        "totalLikes": {
+          "type": "string",
+          "format": "int64"
+        },
+        "totalComments": {
+          "type": "string",
+          "format": "int64"
+        },
+        "totalReposts": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "title": "Аналитика по автору"
+    },
+    "v1FreshTailModel": {
+      "type": "object",
+      "properties": {
+        "views": {
+          "type": "string",
+          "format": "int64"
+        },
+        "likes": {
+          "type": "string",
+          "format": "int64"
+        },
+        "comments": {
+          "type": "string",
+          "format": "int64"
+        },
+        "reposts": {
+          "type": "string",
+          "format": "int64"
+        },
+        "uniqueUsers": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "title": "Свежий хвост из Redis"
+    },
+    "v1GetAuthorStatsResponse": {
+      "type": "object",
+      "properties": {
+        "stats": {
+          "$ref": "#/definitions/v1AuthorStatsModel"
+        }
+      }
+    },
+    "v1GetPostStatsResponse": {
+      "type": "object",
+      "properties": {
+        "stats": {
+          "$ref": "#/definitions/v1PostStatsModel"
+        }
+      }
+    },
+    "v1GetTopResponse": {
+      "type": "object",
+      "properties": {
+        "top": {
+          "$ref": "#/definitions/v1TopModel"
+        }
+      }
+    },
+    "v1PostStatsModel": {
+      "type": "object",
+      "properties": {
+        "postId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "totals": {
+          "$ref": "#/definitions/v1TotalsModel"
+        },
+        "freshTail": {
+          "$ref": "#/definitions/v1FreshTailModel"
+        },
+        "lastSyncedAt": {
+          "type": "string",
+          "title": "RFC3339"
+        }
+      },
+      "title": "Cстатистика по посту"
+    },
+    "v1TopItemModel": {
+      "type": "object",
+      "properties": {
+        "postId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "value": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "title": "Элемент топа"
+    },
+    "v1TopModel": {
+      "type": "object",
+      "properties": {
+        "metric": {
+          "type": "string",
+          "title": "просмотр, комментарии, лайки"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1TopItemModel"
+          }
+        }
+      },
+      "title": "Топ постов"
+    },
+    "v1TotalsModel": {
+      "type": "object",
+      "properties": {
+        "totalViews": {
+          "type": "string",
+          "format": "int64"
+        },
+        "totalLikes": {
+          "type": "string",
+          "format": "int64"
+        },
+        "totalComments": {
+          "type": "string",
+          "format": "int64"
+        },
+        "totalReposts": {
+          "type": "string",
+          "format": "int64"
+        },
+        "uniqueUsers": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "title": "Итоговые агрегаты по посту"
+    }
+  }
+}
