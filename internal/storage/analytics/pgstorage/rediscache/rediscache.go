@@ -19,8 +19,6 @@ func New(rdb *redis.Client) *RedisCache {
 	return &RedisCache{rdb: rdb}
 }
 
-// ---------- keys ----------
-
 func totalsKey(postID uint64) string { return "analytics:totals:" + strconv.FormatUint(postID, 10) }
 func deltaKey(postID uint64) string  { return "analytics:delta:" + strconv.FormatUint(postID, 10) }
 func uniqKey(postID uint64) string   { return "analytics:uniq:" + strconv.FormatUint(postID, 10) }
@@ -29,8 +27,6 @@ func topKey(metric string) string { return "analytics:top:" + metric }
 func dirtyKey() string            { return "analytics:dirty" }
 
 func lastSyncedKey() string { return "analytics:last_synced_at" }
-
-// ---------- helpers ----------
 
 func (c *RedisCache) readTotalsHash(ctx context.Context, key string) (svc.PostTotals, bool, error) {
 	m, err := c.rdb.HGetAll(ctx, key).Result()
@@ -75,11 +71,11 @@ func (c *RedisCache) readTotalsHash(ctx context.Context, key string) (svc.PostTo
 	}
 
 	return svc.PostTotals{
-		Views:       views,
-		Likes:       likes,
-		Comments:    comments,
-		Reposts:     reposts,
-		UniqueUsers: unique,
+		Views:       uint64(views),
+		Likes:       uint64(likes),
+		Comments:    uint64(comments),
+		Reposts:     uint64(reposts),
+		UniqueUsers: uint64(unique),
 	}, true, nil
 }
 
@@ -106,8 +102,6 @@ func (c *RedisCache) incrHashFields(ctx context.Context, key string, d svc.Total
 	return err
 }
 
-// ---------- Cache interface implementation ----------
-
 func (c *RedisCache) IncrTotals(ctx context.Context, postID uint64, delta svc.TotalsDelta) error {
 	return c.incrHashFields(ctx, totalsKey(postID), delta)
 }
@@ -126,16 +120,15 @@ func (c *RedisCache) GetDelta(ctx context.Context, postID uint64) (svc.TotalsDel
 	}
 
 	return svc.TotalsDelta{
-		Views:       t.Views,
-		Likes:       t.Likes,
-		Comments:    t.Comments,
-		Reposts:     t.Reposts,
-		UniqueUsers: t.UniqueUsers,
+		Views:       int64(t.Views),
+		Likes:       int64(t.Likes),
+		Comments:    int64(t.Comments),
+		Reposts:     int64(t.Reposts),
+		UniqueUsers: int64(t.UniqueUsers),
 	}, true, nil
 }
 
 func (c *RedisCache) ResetDelta(ctx context.Context, postID uint64) error {
-	// delta — это hash, чистим его полностью
 	return c.rdb.Del(ctx, deltaKey(postID)).Err()
 }
 
@@ -174,7 +167,7 @@ func (c *RedisCache) GetTop(ctx context.Context, metric string, limit uint32) ([
 		}
 		out = append(out, svc.TopItem{
 			PostID: postID,
-			Value:  int64(z.Score),
+			Value:  uint64(z.Score),
 		})
 	}
 	return out, nil
@@ -189,7 +182,6 @@ func (c *RedisCache) GetDirtyBatch(ctx context.Context, limit int) ([]uint64, er
 		return []uint64{}, nil
 	}
 
-	// SPopN атомарно забирает N элементов из множества (и удаляет их из dirty)
 	members, err := c.rdb.SPopN(ctx, dirtyKey(), int64(limit)).Result()
 	if err != nil {
 		return nil, err
@@ -207,7 +199,6 @@ func (c *RedisCache) GetDirtyBatch(ctx context.Context, limit int) ([]uint64, er
 }
 
 func (c *RedisCache) SetLastSyncedAt(ctx context.Context, ts string) error {
-	// TTL не ставим — это системная метка
 	return c.rdb.Set(ctx, lastSyncedKey(), ts, 0).Err()
 }
 

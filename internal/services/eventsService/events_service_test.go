@@ -3,6 +3,7 @@ package eventsService
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strconv"
 	"strings"
 	"testing"
@@ -28,6 +29,13 @@ func (s *ServiceSuite) SetupTest() {
 	s.storage = &mocks.StorageMock{}
 	s.producer = &mocks.ProducerMock{}
 	s.service = NewService(s.storage, s.producer)
+	s.storage.On("GetPostAuthorID", mock.Anything, mock.AnythingOfType("uint64")).
+		Return(uint64(1), nil).
+		Maybe()
+
+	s.storage.On("GetPost", mock.Anything, mock.AnythingOfType("uint64")).
+		Return((*eventmodel.PostInfo)(nil), fmt.Errorf("GetPost: not implemented")).
+		Maybe()
 }
 
 func (s *ServiceSuite) TestGetPost_NotImplemented() {

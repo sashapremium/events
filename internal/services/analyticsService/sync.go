@@ -38,9 +38,6 @@ func (s *Service) FlushOnce(ctx context.Context, batch int) {
 			continue
 		}
 
-		if err := s.storage.UpsertPostTotals(ctx, postID, delta); err != nil {
-			continue
-		}
 		if err := s.cache.ResetDelta(ctx, postID); err != nil {
 			continue
 		}

@@ -34,17 +34,8 @@ func New(storage Storage, cache Cache) *Service {
 	}
 }
 
-type PostTotals struct {
-	Views, Likes, Comments, Reposts, UniqueUsers int64
-}
-
 type TotalsDelta struct {
 	Views, Likes, Comments, Reposts, UniqueUsers int64
-}
-
-type TopItem struct {
-	PostID uint64
-	Value  int64
 }
 
 var ErrInvalidMetric = errors.New("некорректная метрика (ожидается views|likes|comments|reposts)")

@@ -7,7 +7,7 @@ const (
 	totalsTableName = "post_totals"
 
 	IDColumnName        = "id"
-	ContentIDColumnName = "content_id" // post_id
+	ContentIDColumnName = "content_id"
 	AuthorIDColumnName  = "author_id"
 	UserHashColumnName  = "user_hash"
 	TypeColumnName      = "type"
@@ -22,15 +22,6 @@ const (
 	UniqueUsersColumnName = "unique_users"
 	UpdatedAtColumnName   = "updated_at"
 )
-
-type ContentEvent struct {
-	ContentID string
-	AuthorID  string
-	UserHash  string
-	Type      string
-	Comment   string
-	At        time.Time
-}
 
 type TopPostItem struct {
 	ContentID string

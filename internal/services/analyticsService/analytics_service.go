@@ -7,11 +7,25 @@ import (
 	analyticsmodels "github.com/sashapremium/events/internal/pb/models"
 )
 
+type PostTotals struct {
+	Views       uint64
+	Likes       uint64
+	Comments    uint64
+	Reposts     uint64
+	UniqueUsers uint64
+}
+
+type TopItem struct {
+	PostID uint64
+	Value  uint64
+}
+
 type Storage interface {
-	UpsertPostTotals(ctx context.Context, postID uint64, delta TotalsDelta) error
-	GetPostTotals(ctx context.Context, postID uint64) (PostTotals, error)
-	GetAuthorStats(ctx context.Context, authorID string) (*analyticsmodels.AuthorStatsModel, error)
 	InsertEvents(ctx context.Context, events []*models.ContentEvent) error
+
+	GetPostTotals(ctx context.Context, postID uint64) (PostTotals, error)
+	GetTopPostsByType(ctx context.Context, eventType string, limit uint64) ([]TopItem, error)
+	GetAuthorStats(ctx context.Context, authorID uint64) (*analyticsmodels.AuthorStatsModel, error)
 }
 
 type Cache interface {
