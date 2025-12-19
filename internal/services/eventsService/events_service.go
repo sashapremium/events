@@ -8,6 +8,7 @@ import (
 
 type Storage interface {
 	InsertEvents(ctx context.Context, events []*eventmodel.ContentEvent) error
+	GetPost(ctx context.Context, id uint64) (*eventmodel.PostInfo, error)
 }
 
 type EventProducer interface {

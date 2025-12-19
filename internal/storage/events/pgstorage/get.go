@@ -18,7 +18,7 @@ func (s *PGStorage) GetPost(ctx context.Context, id uint64) (*eventmodel.PostInf
 	`
 	var p eventmodel.PostInfo
 
-	err := s.pool.QueryRow(ctx, q, id).Scan(
+	err := s.db.QueryRow(ctx, q, id).Scan(
 		&p.ID,
 		&p.Title,
 		&p.AuthorID,
