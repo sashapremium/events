@@ -12,6 +12,10 @@ func (s *Service) ProcessEvent(ctx context.Context, ev *models.ContentEvent) err
 		return nil
 	}
 
+	if err := s.storage.InsertEvents(ctx, []*models.ContentEvent{ev}); err != nil {
+		return err
+	}
+
 	postID, err := strconv.ParseUint(ev.ContentID, 10, 64)
 	if err != nil {
 		return err
@@ -24,7 +28,6 @@ func (s *Service) ProcessEvent(ctx context.Context, ev *models.ContentEvent) err
 	case models.EventView:
 		delta.Views = 1
 		metric = "views"
-
 		if ev.UserHash != "" {
 			added, err := s.cache.AddUniqueUser(ctx, postID, ev.UserHash)
 			if err != nil {
@@ -46,9 +49,6 @@ func (s *Service) ProcessEvent(ctx context.Context, ev *models.ContentEvent) err
 	case models.EventRepost:
 		delta.Reposts = 1
 		metric = "reposts"
-
-	default:
-		return nil
 	}
 
 	if err := s.cache.IncrTotals(ctx, postID, delta); err != nil {

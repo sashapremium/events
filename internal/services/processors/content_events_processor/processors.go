@@ -9,7 +9,6 @@ import (
 type analyticsService interface {
 	ProcessEvent(ctx context.Context, ev *models.ContentEvent) error
 }
-
 type ContentEventsProcessor struct {
 	analyticsService analyticsService
 }

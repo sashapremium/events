@@ -35,3 +35,9 @@ func (s *PGStorage) GetPost(ctx context.Context, id uint64) (*eventmodel.PostInf
 
 	return &p, nil
 }
+func (s *PGStorage) GetPostAuthorID(ctx context.Context, postID uint64) (uint64, error) {
+	const q = `SELECT author_id FROM posts WHERE id = $1`
+	var authorID uint64
+	err := s.db.QueryRow(ctx, q, postID).Scan(&authorID)
+	return authorID, err
+}

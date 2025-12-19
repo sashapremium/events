@@ -19,7 +19,6 @@ func (s *Service) RunSyncLoop(ctx context.Context) {
 	}
 }
 
-// Экспортируем unit-логику
 func (s *Service) FlushOnce(ctx context.Context, batch int) {
 	postIDs, err := s.cache.GetDirtyBatch(ctx, batch)
 	if err != nil || len(postIDs) == 0 {

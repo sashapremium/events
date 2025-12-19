@@ -22,21 +22,39 @@ func (s *Service) ViewPost(ctx context.Context, id uint64, userHash string) erro
 	if err := s.validateUser(userHash); err != nil {
 		return err
 	}
-	return s.persistAndPublish(ctx, newEvent(eventmodel.EventView, id, userHash, ""))
+
+	ev, err := s.newEventWithAuthor(ctx, eventmodel.EventView, id, userHash, "")
+	if err != nil {
+		return err
+	}
+
+	return s.persistAndPublish(ctx, ev)
 }
 
 func (s *Service) LikePost(ctx context.Context, id uint64, userHash string) error {
 	if err := s.validateUser(userHash); err != nil {
 		return err
 	}
-	return s.persistAndPublish(ctx, newEvent(eventmodel.EventLike, id, userHash, ""))
+
+	ev, err := s.newEventWithAuthor(ctx, eventmodel.EventLike, id, userHash, "")
+	if err != nil {
+		return err
+	}
+
+	return s.persistAndPublish(ctx, ev)
 }
 
 func (s *Service) RepostPost(ctx context.Context, id uint64, userHash string) error {
 	if err := s.validateUser(userHash); err != nil {
 		return err
 	}
-	return s.persistAndPublish(ctx, newEvent(eventmodel.EventRepost, id, userHash, ""))
+
+	ev, err := s.newEventWithAuthor(ctx, eventmodel.EventRepost, id, userHash, "")
+	if err != nil {
+		return err
+	}
+
+	return s.persistAndPublish(ctx, ev)
 }
 
 func (s *Service) AddComment(ctx context.Context, id uint64, userHash, text string) (*pbmodels.CommentModel, error) {
@@ -44,7 +62,11 @@ func (s *Service) AddComment(ctx context.Context, id uint64, userHash, text stri
 		return nil, err
 	}
 
-	ev := newEvent(eventmodel.EventComment, id, userHash, text)
+	ev, err := s.newEventWithAuthor(ctx, eventmodel.EventComment, id, userHash, text)
+	if err != nil {
+		return nil, err
+	}
+
 	if err := s.persistAndPublish(ctx, ev); err != nil {
 		return nil, err
 	}
@@ -55,6 +77,28 @@ func (s *Service) AddComment(ctx context.Context, id uint64, userHash, text stri
 		Text:      text,
 		CreatedAt: ev.At.Format(time.RFC3339),
 	}, nil
+}
+
+func (s *Service) newEventWithAuthor(
+	ctx context.Context,
+	typ eventmodel.EventType,
+	postID uint64,
+	userHash string,
+	comment string,
+) (*eventmodel.ContentEvent, error) {
+	if s.storage == nil {
+		return nil, errors.New("storage is nil")
+	}
+
+	ev := newEvent(typ, postID, userHash, comment)
+
+	authorID, err := s.storage.GetPostAuthorID(ctx, postID)
+	if err != nil {
+		return nil, err
+	}
+	ev.AuthorID = authorID
+
+	return ev, nil
 }
 
 func newEvent(typ eventmodel.EventType, postID uint64, userHash, comment string) *eventmodel.ContentEvent {

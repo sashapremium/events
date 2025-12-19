@@ -11,7 +11,6 @@ func userHashFromMetadata(ctx context.Context) string {
 		return ""
 	}
 
-	// выбери один ключ и везде используй его
 	if v := md.Get("x-user-hash"); len(v) > 0 {
 		return v[0]
 	}

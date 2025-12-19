@@ -39,5 +39,11 @@ func (c *ContentEventsConsumer) Consume(ctx context.Context) {
 		if err := c.processor.Handle(ctx, &ev); err != nil {
 			slog.Error("ContentEventsConsumer.Handle error", "error", err.Error())
 		}
+		slog.Info("ContentEventsConsumer: processed event",
+			"type", ev.Type,
+			"content_id", ev.ContentID,
+			"author_id", ev.AuthorID,
+			"user_hash", ev.UserHash,
+		)
 	}
 }

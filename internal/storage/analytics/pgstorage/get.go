@@ -6,6 +6,7 @@ import (
 	"time"
 
 	analyticsmodels "github.com/sashapremium/events/internal/pb/models"
+	svc "github.com/sashapremium/events/internal/services/analyticsService"
 )
 
 func (s *PGStorage) GetTopPostsByType(ctx context.Context, eventType string, from, to time.Time, limit uint64) ([]TopPostItem, error) {
@@ -68,53 +69,6 @@ func (s *PGStorage) GetTopAuthorsByType(ctx context.Context, eventType string, f
 	return out, nil
 }
 
-func (s *PGStorage) GetPostStats(ctx context.Context, contentID string, from, to time.Time) (PostStats, error) {
-	st := PostStats{
-		ContentID:    contentID,
-		CalculatedAt: time.Now().UTC(),
-	}
-
-	err := s.db.QueryRow(ctx, `
-		SELECT
-			COUNT(*) FILTER (WHERE type = 'view')                                   AS views_total,
-			COUNT(DISTINCT user_hash) FILTER (WHERE type = 'view')                  AS views_unique,
-			COUNT(*) FILTER (WHERE type = 'like')                                   AS likes,
-			COUNT(*) FILTER (WHERE type = 'repost')                                 AS reposts,
-			COUNT(*) FILTER (WHERE type = 'comment')                                AS comments
-		FROM content_events
-		WHERE content_id = $1 AND at >= $2 AND at < $3
-	`, contentID, from, to).Scan(&st.ViewsTotal, &st.ViewsUnique, &st.Likes, &st.Reposts, &st.Comments)
-	if err != nil {
-		return PostStats{}, fmt.Errorf("select post stats: %w", err)
-	}
-
-	rows, err := s.db.Query(ctx, `
-		SELECT date_trunc('day', at) AS day, COUNT(*) AS cnt
-		FROM content_events
-		WHERE content_id = $1 AND type = 'view' AND at >= $2 AND at < $3
-		GROUP BY day
-		ORDER BY day ASC
-	`, contentID, from, to)
-	if err != nil {
-		return PostStats{}, fmt.Errorf("select daily views: %w", err)
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		var day time.Time
-		var cnt int64
-		if err := rows.Scan(&day, &cnt); err != nil {
-			return PostStats{}, fmt.Errorf("scan daily views: %w", err)
-		}
-		st.DailyViews = append(st.DailyViews, DailyCount{Day: day, Count: uint64(cnt)})
-	}
-	if err := rows.Err(); err != nil {
-		return PostStats{}, fmt.Errorf("rows daily views err: %w", err)
-	}
-
-	return st, nil
-}
-
 func (s *PGStorage) GetAuthorStats(ctx context.Context, authorID string) (*analyticsmodels.AuthorStatsModel, error) {
 	var posts int64
 	var totalViews, totalLikes, totalComments, totalReposts int64
@@ -143,4 +97,30 @@ func (s *PGStorage) GetAuthorStats(ctx context.Context, authorID string) (*analy
 	}
 
 	return out, nil
+}
+func (s *PGStorage) GetPostTotals(ctx context.Context, postID uint64) (svc.PostTotals, error) {
+	var viewsTotal, viewsUnique, likes, comments, reposts int64
+
+	err := s.db.QueryRow(ctx, `
+		SELECT
+			COUNT(*) FILTER (WHERE type = 'view')                                   AS views_total,
+			COUNT(DISTINCT user_hash) FILTER (WHERE type = 'view')                  AS views_unique,
+			COUNT(*) FILTER (WHERE type = 'like')                                   AS likes,
+			COUNT(*) FILTER (WHERE type = 'comment')                                AS comments,
+			COUNT(*) FILTER (WHERE type = 'repost')                                 AS reposts
+		FROM content_events
+		WHERE content_id = $1
+	`, int64(postID)).Scan(&viewsTotal, &viewsUnique, &likes, &comments, &reposts)
+
+	if err != nil {
+		return svc.PostTotals{}, fmt.Errorf("select post totals: %w", err)
+	}
+
+	return svc.PostTotals{
+		Views:       viewsTotal,
+		Likes:       likes,
+		Comments:    comments,
+		Reposts:     reposts,
+		UniqueUsers: viewsUnique,
+	}, nil
 }
