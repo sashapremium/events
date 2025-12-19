@@ -40,7 +40,9 @@ func (a *EventsServiceAPI) GetPost(ctx context.Context, req *events_api.GetPostR
 		return nil, err
 	}
 
-	_ = a.svc.ViewPost(ctx, req.Id, "")
+	if userHash := userHashFromMetadata(ctx); userHash != "" {
+		_ = a.svc.ViewPost(ctx, req.Id, userHash)
+	}
 
 	return &events_api.GetPostResponse{
 		Post: mapPost(post),

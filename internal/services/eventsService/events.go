@@ -2,6 +2,7 @@ package eventsService
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strconv"
 	"time"
@@ -11,8 +12,10 @@ import (
 )
 
 func (s *Service) GetPost(ctx context.Context, id uint64) (*eventmodel.PostInfo, error) {
-	// Заглушка: посты в этом сервисе не хранятся.
-	return nil, fmt.Errorf("GetPost: not implemented")
+	if s.storage == nil {
+		return nil, errors.New("storage is nil")
+	}
+	return s.storage.GetPost(ctx, id)
 }
 
 func (s *Service) ViewPost(ctx context.Context, id uint64, userHash string) error {

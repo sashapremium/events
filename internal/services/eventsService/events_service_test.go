@@ -255,7 +255,7 @@ func (s *ServiceSuite) TestAddComment_EmptyTextValidationError() {
 }
 
 func (s *ServiceSuite) TestAddComment_TooLongValidationError() {
-	text := strings.Repeat("a", 1001) // если лимит 1000
+	text := strings.Repeat("a", 1001) //  лимит 1000
 	comment, err := s.service.AddComment(s.ctx, 1, "u", text)
 	s.Require().Error(err)
 	s.Nil(comment)
