@@ -37,17 +37,14 @@ func (s *ServiceSuite) SetupTest() {
 		Return((*eventmodel.PostInfo)(nil), fmt.Errorf("GetPost: not implemented")).
 		Maybe()
 }
-
 func (s *ServiceSuite) TestGetPost_NotImplemented() {
 	_, err := s.service.GetPost(s.ctx, 1)
 	s.Require().Error(err)
 }
-
 func (s *ServiceSuite) TestViewPost_Success() {
 	postID := uint64(40410)
 	userHash := "user-123"
 	wantContentID := strconv.FormatUint(postID, 10)
-
 	s.storage.
 		On("InsertEvents", mock.Anything, mock.MatchedBy(func(events []*eventmodel.ContentEvent) bool {
 			s.Require().Len(events, 1)
@@ -75,7 +72,6 @@ func (s *ServiceSuite) TestViewPost_Success() {
 
 	err := s.service.ViewPost(s.ctx, postID, userHash)
 	s.Require().NoError(err)
-
 	s.storage.AssertExpectations(s.T())
 	s.producer.AssertExpectations(s.T())
 }
@@ -84,7 +80,6 @@ func (s *ServiceSuite) TestLikePost_Success() {
 	postID := uint64(40410)
 	userHash := "user-123"
 	wantContentID := strconv.FormatUint(postID, 10)
-
 	s.storage.
 		On("InsertEvents", mock.Anything, mock.MatchedBy(func(events []*eventmodel.ContentEvent) bool {
 			s.Require().Len(events, 1)
