@@ -8,7 +8,7 @@ import (
 
 	"github.com/redis/go-redis/v9"
 
-	svc "github.com/sashapremium/events/internal/services/analyticsService"
+	svc "github.com/sashapremium/events/analytics/internal/services/analyticsService"
 )
 
 type RedisCache struct {
