@@ -307,7 +307,7 @@ var File_analytics_api_analytics_proto protoreflect.FileDescriptor
 
 const file_analytics_api_analytics_proto_rawDesc = "" +
 	"\n" +
-	"\x1danalytics_api/analytics.proto\x12\x14analytics.service.v1\x1a\x1cmodels/analytics_model.proto\x1a\x1cgoogle/api/annotations.proto\"D\n" +
+	"\x1danalytics_api/analytics.proto\x12\x14analytics.service.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x1cmodels/analytics_model.proto\"D\n" +
 	"\x13GetPostStatsRequest\x12\x17\n" +
 	"\apost_id\x18\x01 \x01(\x04R\x06postId\x12\x14\n" +
 	"\x05fresh\x18\x02 \x01(\bR\x05fresh\"Q\n" +
@@ -325,7 +325,7 @@ const file_analytics_api_analytics_proto_rawDesc = "" +
 	"\x10AnalyticsService\x12\x8f\x01\n" +
 	"\fGetPostStats\x12).analytics.service.v1.GetPostStatsRequest\x1a*.analytics.service.v1.GetPostStatsResponse\"(\x82\xd3\xe4\x93\x02\"\x12 /api/v1/analytics/post/{post_id}\x12r\n" +
 	"\x06GetTop\x12#.analytics.service.v1.GetTopRequest\x1a$.analytics.service.v1.GetTopResponse\"\x1d\x82\xd3\xe4\x93\x02\x17\x12\x15/api/v1/analytics/top\x12\x99\x01\n" +
-	"\x0eGetAuthorStats\x12+.analytics.service.v1.GetAuthorStatsRequest\x1a,.analytics.service.v1.GetAuthorStatsResponse\",\x82\xd3\xe4\x93\x02&\x12$/api/v1/analytics/author/{author_id}BHZFgithub.com/sashapremium/events/internal/pb/analytics_api;analytics_apib\x06proto3"
+	"\x0eGetAuthorStats\x12+.analytics.service.v1.GetAuthorStatsRequest\x1a,.analytics.service.v1.GetAuthorStatsResponse\",\x82\xd3\xe4\x93\x02&\x12$/api/v1/analytics/author/{author_id}BRZPgithub.com/sashapremium/events/analytics/internal/pb/analytics_api;analytics_apib\x06proto3"
 
 var (
 	file_analytics_api_analytics_proto_rawDescOnce sync.Once

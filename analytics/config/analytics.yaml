@@ -1,12 +1,12 @@
 env: docker
 
 postgres:
-  host: postgres
+  host: "postgres-analytics"
   port: 5432
-  user: admin
-  password: admin
-  dbname: analytics
-  sslmode: disable
+  user: "admin"
+  password: "admin"
+  dbname: "analytics"
+  sslmode: "disable"
 
 kafka:
   brokers:

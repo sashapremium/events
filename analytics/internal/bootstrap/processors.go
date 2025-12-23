@@ -1,4 +1,4 @@
-package analytics
+package bootstrap
 
 import (
 	analyticsService "github.com/sashapremium/events/analytics/internal/services/analyticsService"

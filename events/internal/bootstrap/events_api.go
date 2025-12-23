@@ -1,4 +1,4 @@
-package events
+package bootstrap
 
 import (
 	api "github.com/sashapremium/events/events/internal/api/events_service_api"

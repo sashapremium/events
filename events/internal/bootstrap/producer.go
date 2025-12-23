@@ -1,4 +1,4 @@
-package events
+package bootstrap
 
 import (
 	"github.com/sashapremium/events/events/config"

@@ -1,7 +1,6 @@
 services:
   redis:
     image: redis:7-alpine
-    container_name: redis
     restart: unless-stopped
     ports:
       - "6379:6379"
@@ -11,13 +10,12 @@ services:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
       timeout: 3s
-      retries: 3
+      retries: 5
     networks:
       - events-net
 
-  postgres:
+  postgres-events:
     image: postgres:15-alpine
-    container_name: postgres
     restart: unless-stopped
     environment:
       POSTGRES_USER: admin
@@ -26,18 +24,36 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_events_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U admin -d events"]
       interval: 5s
       timeout: 3s
-      retries: 3
+      retries: 10
     networks:
       - events-net
 
-  kafka:
+  postgres-analytics:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: analytics
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_analytics_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d analytics"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - events-net
+
+  redpanda:
     image: redpandadata/redpanda:v23.3.12
-    container_name: kafka
     restart: unless-stopped
     command:
       - redpanda
@@ -46,43 +62,44 @@ services:
       - --node-id=1
       - --check=false
       - --kafka-addr=PLAINTEXT://0.0.0.0:9092
-      - --advertise-kafka-addr=PLAINTEXT://kafka:9092
+      - --advertise-kafka-addr=PLAINTEXT://redpanda:9092
     ports:
       - "9092:9092"
     networks:
       - events-net
-
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
-    container_name: kafka-ui
     restart: unless-stopped
     depends_on:
-      - kafka
+      - redpanda
     ports:
       - "8081:8080"
     environment:
       KAFKA_CLUSTERS_0_NAME: redpanda
-      KAFKA_CLUSTERS_0_BOOTSTRAP_SERVERS: kafka:9092
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: redpanda:9092
     networks:
       - events-net
 
   events-app:
-    build: .
-    container_name: eventsService-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: events
     restart: unless-stopped
     depends_on:
-      postgres:
+      postgres-events:
         condition: service_healthy
-      kafka:
+      redpanda:
         condition: service_started
-    command: ["/app/eventsService"]
     environment:
       CONFIG_PATH: /config/config.yaml
-      POSTGRES_DSN: postgres://admin:admin@postgres:5432/events?sslmode=disable
-      KAFKA_BROKERS: kafka:9092
+      POSTGRES_DSN: postgres://admin:admin@postgres-events:5432/events?sslmode=disable
+      KAFKA_BROKERS: redpanda:9092
       KAFKA_TOPIC: content_events
+      swaggerPath: /swagger/events.swagger.json
     volumes:
-      - ./config:/config:ro
+      - ./events/config/config.yaml:/config/config.yaml:ro
+      - ./events/internal/pb/swagger/events_api/events.swagger.json:/swagger/events.swagger.json:ro
     ports:
       - "8080:8080"
       - "50051:50051"
@@ -90,35 +107,35 @@ services:
       - events-net
 
   analytics-app:
-    build: .
-    container_name: analytics-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: analytics
     restart: unless-stopped
     depends_on:
-      postgres:
+      postgres-analytics:
         condition: service_healthy
-      kafka:
+      redpanda:
         condition: service_started
       redis:
-        condition: service_started
-    command: ["/app/analyticsService"]
+        condition: service_healthy
     environment:
       CONFIG_PATH: /config/analytics.yaml
-      POSTGRES_DSN: postgres://admin:admin@postgres:5432/analytics?sslmode=disable
-
-      KAFKA_BROKERS: kafka:9092
+      POSTGRES_DSN: postgres://admin:admin@postgres-analytics:5432/analytics?sslmode=disable
+      KAFKA_BROKERS: redpanda:9092
       KAFKA_TOPIC: content_events
       REDIS_ADDR: redis:6379
     volumes:
-      - ./config:/config:ro
+      - ./analytics/config/analytics.yaml:/config/analytics.yaml:ro
     ports:
       - "8082:8082"
-
     networks:
       - events-net
 
 volumes:
   redis_data:
-  postgres_data:
+  postgres_events_data:
+  postgres_analytics_data:
 
 networks:
   events-net:

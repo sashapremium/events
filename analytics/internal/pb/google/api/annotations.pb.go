@@ -59,7 +59,7 @@ var File_google_api_annotations_proto protoreflect.FileDescriptor
 const file_google_api_annotations_proto_rawDesc = "" +
 	"\n" +
 	"\x1cgoogle/api/annotations.proto\x12\n" +
-	"google.api\x1a\x15google/api/http.proto\x1a google/protobuf/descriptor.proto:K\n" +
+	"google.api\x1a google/protobuf/descriptor.proto\x1a\x15google/api/http.proto:K\n" +
 	"\x04http\x12\x1e.google.protobuf.MethodOptions\x18\xb0ʼ\" \x01(\v2\x14.google.api.HttpRuleR\x04httpBn\n" +
 	"\x0ecom.google.apiB\x10AnnotationsProtoP\x01ZAgoogle.golang.org/genproto/googleapis/api/annotations;annotations\xa2\x02\x04GAPIb\x06proto3"
 

@@ -1,11 +1,11 @@
 syntax = "proto3";
 
-package content.service.v1;
+package content.service.v2;
 
-option go_package = "github.com/sashapremium/events/internal/pb/events_api;events_api";
+option go_package = "github.com/sashapremium/events/events/internal/pb/events_api;events_api";
 
-import "api/google/api/annotations.proto";
-import "api/models/events_model.proto";
+import "google/api/annotations.proto";
+import "models/events_model.proto";
 
 service EventsService {
   rpc GetPost (GetPostRequest) returns (GetPostResponse) {

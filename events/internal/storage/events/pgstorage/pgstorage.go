@@ -40,6 +40,7 @@ func (s *PGStorage) Close() {
 
 func (s *PGStorage) initTables(ctx context.Context) error {
 	sql := fmt.Sprintf(`
+		-- events table
 		CREATE TABLE IF NOT EXISTS %s (
 			%s      BIGSERIAL PRIMARY KEY,
 			%s      TEXT NOT NULL,
@@ -54,6 +55,22 @@ func (s *PGStorage) initTables(ctx context.Context) error {
 
 		CREATE INDEX IF NOT EXISTS idx_%s_type_at
 			ON %s (%s, %s);
+
+
+		CREATE TABLE IF NOT EXISTS posts (
+			id           BIGSERIAL PRIMARY KEY,
+			title        TEXT NOT NULL,
+			author_id    BIGINT NOT NULL,
+			category     TEXT NOT NULL,
+			content      TEXT NOT NULL,
+			published_at TIMESTAMPTZ NOT NULL DEFAULT now()
+		);
+
+		CREATE INDEX IF NOT EXISTS idx_posts_author_id
+			ON posts (author_id);
+
+		CREATE INDEX IF NOT EXISTS idx_posts_published_at
+			ON posts (published_at);
 	`,
 		eventsTableName,
 		IDColumnName,

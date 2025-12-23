@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/sashapremium/events/events/config"
-	"github.com/sashapremium/events/events/internal/bootstrap/events"
+	"github.com/sashapremium/events/events/internal/bootstrap"
 )
 
 func getenv(key, def string) string {
@@ -17,23 +17,21 @@ func getenv(key, def string) string {
 }
 
 func main() {
-	cfgPath := getenv("CONFIG_PATH", "config.yaml")
+	cfgPath := getenv("CONFIG_PATH", "/config/config.yaml")
 
 	cfg, err := config.LoadConfig(cfgPath)
 	if err != nil {
 		log.Fatalf("ошибка парсинга конфига %q: %v", cfgPath, err)
 	}
 	// Хранилище
-	eventsStorage := events.InitPGStorage(cfg)
+	eventsStorage := bootstrap.InitPGStorage(cfg)
 	// Kafka-продюсер
-	eventsProducer := events.InitKafkaProducer(cfg)
+	eventsProducer := bootstrap.InitKafkaProducer(cfg)
 	//Сервис
-	eventsService := events.InitEventsService(eventsStorage, eventsProducer)
+	eventsService := bootstrap.InitEventsService(eventsStorage, eventsProducer)
 	//API
-	eventsAPI := events.InitEventsServiceAPI(eventsService)
+	eventsAPI := bootstrap.InitEventsServiceAPI(eventsService)
 
-	if err := events.AppRun(cfg, eventsAPI); err != nil {
-		log.Fatal(err)
-	}
+	bootstrap.AppRun(eventsAPI)
 
 }

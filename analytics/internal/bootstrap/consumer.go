@@ -1,4 +1,4 @@
-package analytics
+package bootstrap
 
 import (
 	"github.com/sashapremium/events/analytics/config"

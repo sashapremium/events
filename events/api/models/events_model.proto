@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package content.models.v1;
 
-option go_package = "github.com/sashapremium/events/internal/pb/models;models";
+option go_package = "github.com/sashapremium/events/events/internal/pb/models;models";
 
 message PostModel {
   uint64 id           = 1;

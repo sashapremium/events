@@ -1,28 +1,30 @@
-FROM golang:1.25-alpine AS builder
+# syntax=docker/dockerfile:1
 
-
-WORKDIR /app
+FROM golang:1.24-alpine AS base
+WORKDIR /src
 
 COPY go.mod go.sum ./
 RUN go mod download
 
-COPY . .
-
+# --- build events ---
+FROM base AS events-builder
+COPY events ./events
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
-    go build -o eventsService ./cmd/app/events
+    go build -o /out/eventsService ./events/cmd/app
 
+# --- build analytics ---
+FROM base AS analytics-builder
+COPY analytics ./analytics
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
-    go build -o analyticsService ./cmd/app/analytics
+    go build -o /out/analyticsService ./analytics/cmd/app
 
-FROM alpine:3.19
-
-FROM alpine:3.19
-
+# --- runtime images ---
+FROM alpine:3.20 AS events
 WORKDIR /app
+COPY --from=events-builder /out/eventsService /app/eventsService
+ENTRYPOINT ["/app/eventsService"]
 
-COPY --from=builder /app/eventsService /app/eventsService
-COPY --from=builder /app/analyticsService /app/analyticsService
-
-COPY config/config.yaml /config/config.yaml
-
-EXPOSE 8080
+FROM alpine:3.20 AS analytics
+WORKDIR /app
+COPY --from=analytics-builder /out/analyticsService /app/analyticsService
+ENTRYPOINT ["/app/analyticsService"]

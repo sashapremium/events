@@ -471,7 +471,7 @@ const file_models_analytics_model_proto_rawDesc = "" +
 	"\vtotal_likes\x18\x04 \x01(\x03R\n" +
 	"totalLikes\x12%\n" +
 	"\x0etotal_comments\x18\x05 \x01(\x03R\rtotalComments\x12#\n" +
-	"\rtotal_reposts\x18\x06 \x01(\x03R\ftotalRepostsB:Z8github.com/sashapremium/events/internal/pb/models;modelsb\x06proto3"
+	"\rtotal_reposts\x18\x06 \x01(\x03R\ftotalRepostsBDZBgithub.com/sashapremium/events/analytics/internal/pb/models;modelsb\x06proto3"
 
 var (
 	file_models_analytics_model_proto_rawDescOnce sync.Once
