@@ -2,6 +2,7 @@ package analyticsService
 
 import (
 	"context"
+	"time"
 
 	"github.com/sashapremium/events/analytics/internal/models"
 	analyticsmodels "github.com/sashapremium/events/analytics/internal/pb/models"
@@ -30,6 +31,9 @@ type Storage interface {
 type Cache interface {
 	IncrTotals(ctx context.Context, postID uint64, delta TotalsDelta) error
 	GetTotals(ctx context.Context, postID uint64) (PostTotals, bool, error)
+
+	GetAuthorStats(ctx context.Context, authorID uint64) (*analyticsmodels.AuthorStatsModel, bool, error)
+	SetAuthorStats(ctx context.Context, authorID uint64, v *analyticsmodels.AuthorStatsModel, ttl time.Duration) error
 
 	GetDelta(ctx context.Context, postID uint64) (TotalsDelta, bool, error)
 	ResetDelta(ctx context.Context, postID uint64) error

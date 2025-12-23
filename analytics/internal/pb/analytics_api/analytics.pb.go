@@ -217,7 +217,8 @@ func (x *GetTopResponse) GetTop() *models.TopModel {
 
 type GetAuthorStatsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AuthorId      string                 `protobuf:"bytes,1,opt,name=author_id,json=authorId,proto3" json:"author_id,omitempty"`
+	AuthorId      uint64                 `protobuf:"varint,1,opt,name=author_id,json=authorId,proto3" json:"author_id,omitempty"`
+	Fresh         bool                   `protobuf:"varint,2,opt,name=fresh,proto3" json:"fresh,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -252,11 +253,18 @@ func (*GetAuthorStatsRequest) Descriptor() ([]byte, []int) {
 	return file_analytics_api_analytics_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *GetAuthorStatsRequest) GetAuthorId() string {
+func (x *GetAuthorStatsRequest) GetAuthorId() uint64 {
 	if x != nil {
 		return x.AuthorId
 	}
-	return ""
+	return 0
+}
+
+func (x *GetAuthorStatsRequest) GetFresh() bool {
+	if x != nil {
+		return x.Fresh
+	}
+	return false
 }
 
 type GetAuthorStatsResponse struct {
@@ -317,9 +325,10 @@ const file_analytics_api_analytics_proto_rawDesc = "" +
 	"\x06metric\x18\x01 \x01(\tR\x06metric\x12\x14\n" +
 	"\x05limit\x18\x02 \x01(\rR\x05limit\"A\n" +
 	"\x0eGetTopResponse\x12/\n" +
-	"\x03top\x18\x01 \x01(\v2\x1d.analytics.models.v1.TopModelR\x03top\"4\n" +
+	"\x03top\x18\x01 \x01(\v2\x1d.analytics.models.v1.TopModelR\x03top\"J\n" +
 	"\x15GetAuthorStatsRequest\x12\x1b\n" +
-	"\tauthor_id\x18\x01 \x01(\tR\bauthorId\"U\n" +
+	"\tauthor_id\x18\x01 \x01(\x04R\bauthorId\x12\x14\n" +
+	"\x05fresh\x18\x02 \x01(\bR\x05fresh\"U\n" +
 	"\x16GetAuthorStatsResponse\x12;\n" +
 	"\x05stats\x18\x01 \x01(\v2%.analytics.models.v1.AuthorStatsModelR\x05stats2\xb4\x03\n" +
 	"\x10AnalyticsService\x12\x8f\x01\n" +

@@ -9,6 +9,9 @@ import (
 	"github.com/redis/go-redis/v9"
 
 	svc "github.com/sashapremium/events/analytics/internal/services/analyticsService"
+	"google.golang.org/protobuf/proto"
+
+	analyticsmodels "github.com/sashapremium/events/analytics/internal/pb/models"
 )
 
 type RedisCache struct {
@@ -17,6 +20,9 @@ type RedisCache struct {
 
 func New(rdb *redis.Client) *RedisCache {
 	return &RedisCache{rdb: rdb}
+}
+func authorStatsKey(authorID uint64) string {
+	return "analytics:author_stats:" + strconv.FormatUint(authorID, 10)
 }
 
 func totalsKey(postID uint64) string { return "analytics:totals:" + strconv.FormatUint(postID, 10) }
@@ -215,4 +221,27 @@ func (c *RedisCache) GetLastSyncedAt(ctx context.Context) (string, bool, error) 
 
 func (c *RedisCache) ExpireUnique(ctx context.Context, postID uint64, ttl time.Duration) error {
 	return c.rdb.Expire(ctx, uniqKey(postID), ttl).Err()
+}
+func (c *RedisCache) GetAuthorStats(ctx context.Context, authorID uint64) (*analyticsmodels.AuthorStatsModel, bool, error) {
+	b, err := c.rdb.Get(ctx, authorStatsKey(authorID)).Bytes()
+	if err == redis.Nil {
+		return nil, false, nil
+	}
+	if err != nil {
+		return nil, false, err
+	}
+
+	var out analyticsmodels.AuthorStatsModel
+	if err := proto.Unmarshal(b, &out); err != nil {
+		return nil, false, err
+	}
+	return &out, true, nil
+}
+
+func (c *RedisCache) SetAuthorStats(ctx context.Context, authorID uint64, v *analyticsmodels.AuthorStatsModel, ttl time.Duration) error {
+	b, err := proto.Marshal(v)
+	if err != nil {
+		return err
+	}
+	return c.rdb.Set(ctx, authorStatsKey(authorID), b, ttl).Err()
 }

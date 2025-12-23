@@ -46,8 +46,10 @@ message GetTopResponse {
 }
 
 message GetAuthorStatsRequest {
-  string author_id = 1;
+  uint64 author_id = 1;
+  bool fresh = 2;
 }
+
 
 message GetAuthorStatsResponse {
   analytics.models.v1.AuthorStatsModel stats = 1;

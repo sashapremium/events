@@ -3,7 +3,6 @@ package analyticsService
 import (
 	"context"
 	"fmt"
-	"strconv"
 	"time"
 
 	analyticsmodels "github.com/sashapremium/events/analytics/internal/pb/models"
@@ -94,10 +93,16 @@ func (s *Service) GetTop(ctx context.Context, metric string, limit uint32) (*ana
 	return out, nil
 }
 
-func (s *Service) GetAuthorStats(ctx context.Context, authorID string) (*analyticsmodels.AuthorStatsModel, error) {
-	id, err := strconv.ParseUint(authorID, 10, 64)
-	if err != nil {
-		return nil, fmt.Errorf("invalid authorID %q: %w", authorID, err)
+func (s *Service) GetAuthorStats(ctx context.Context, authorID uint64, fresh bool) (*analyticsmodels.AuthorStatsModel, error) {
+	if !fresh {
+		if v, ok, err := s.cache.GetAuthorStats(ctx, authorID); err == nil && ok {
+			return v, nil
+		}
 	}
-	return s.storage.GetAuthorStats(ctx, id)
+	v, err := s.storage.GetAuthorStats(ctx, authorID)
+	if err != nil {
+		return nil, err
+	}
+	_ = s.cache.SetAuthorStats(ctx, authorID, v, 10*time.Second)
+	return v, nil
 }

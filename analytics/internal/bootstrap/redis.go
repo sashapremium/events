@@ -11,7 +11,6 @@ import (
 )
 
 func InitRedis() *redis.Client {
-	// Prefer generic env from docker-compose, keep backward compatibility.
 	addr := firstEnv("REDIS_ADDR", "ANALYTICS_REDIS_ADDR", "redis:6379")
 	pass := firstEnv("REDIS_PASSWORD", "ANALYTICS_REDIS_PASSWORD", "")
 	dbStr := firstEnv("REDIS_DB", "ANALYTICS_REDIS_DB", "0")

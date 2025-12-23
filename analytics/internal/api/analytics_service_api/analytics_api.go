@@ -10,7 +10,7 @@ import (
 type AnalyticsService interface {
 	GetPostStats(ctx context.Context, postID uint64, fresh bool) (*proto_models.PostStatsModel, error)
 	GetTop(ctx context.Context, metric string, limit uint32) (*proto_models.TopModel, error)
-	GetAuthorStats(ctx context.Context, authorID string) (*proto_models.AuthorStatsModel, error)
+	GetAuthorStats(ctx context.Context, authorID uint64, fresh bool) (*proto_models.AuthorStatsModel, error)
 }
 
 type AnalyticsServiceAPI struct {

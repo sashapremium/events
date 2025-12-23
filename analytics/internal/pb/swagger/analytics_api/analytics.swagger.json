@@ -38,7 +38,14 @@
             "name": "authorId",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "fresh",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
           }
         ],
         "tags": [
