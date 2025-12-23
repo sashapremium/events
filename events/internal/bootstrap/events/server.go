@@ -6,8 +6,8 @@ import (
 	"net"
 	"net/http"
 
-	api "github.com/sashapremium/events/internal/api/events_service_api"
-	"github.com/sashapremium/events/internal/pb/events_api"
+	api "github.com/sashapremium/events/events/internal/api/events_service_api"
+	"github.com/sashapremium/events/events/internal/pb/events_api"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"

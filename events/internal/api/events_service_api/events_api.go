@@ -3,9 +3,9 @@ package events_service_api
 import (
 	"context"
 
-	eventmodel "github.com/sashapremium/events/internal/models"
-	"github.com/sashapremium/events/internal/pb/events_api"
-	pbmodels "github.com/sashapremium/events/internal/pb/models"
+	eventmodel "github.com/sashapremium/events/events/internal/models"
+	"github.com/sashapremium/events/events/internal/pb/events_api"
+	pbmodels "github.com/sashapremium/events/events/internal/pb/models"
 )
 
 type EventsService interface {

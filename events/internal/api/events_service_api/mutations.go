@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
-	eventmodel "github.com/sashapremium/events/internal/models"
-	"github.com/sashapremium/events/internal/pb/events_api"
-	pbmodels "github.com/sashapremium/events/internal/pb/models"
+	eventmodel "github.com/sashapremium/events/events/internal/models"
+	"github.com/sashapremium/events/events/internal/pb/events_api"
+	pbmodels "github.com/sashapremium/events/events/internal/pb/models"
 )
 
 func (a *EventsServiceAPI) LikePost(ctx context.Context, req *events_api.LikePostRequest) (*events_api.LikePostResponse, error) {

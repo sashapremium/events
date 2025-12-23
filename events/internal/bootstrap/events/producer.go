@@ -1,10 +1,10 @@
 package events
 
 import (
-	"github.com/sashapremium/events/config"
-	"github.com/sashapremium/events/internal/kafka/producer"
+	"github.com/sashapremium/events/events/config"
+	"github.com/sashapremium/events/events/internal/services/processors/content_events_processor"
 )
 
-func InitKafkaProducer(cfg *config.Config) producer.Producer {
-	return producer.NewKafkaProducer(cfg.Kafka)
+func InitKafkaProducer(cfg *config.Config) contenteventsprocessor.Producer {
+	return contenteventsprocessor.NewKafkaProducer(cfg.Kafka)
 }

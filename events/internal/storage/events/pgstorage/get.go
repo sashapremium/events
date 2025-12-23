@@ -5,7 +5,7 @@ import (
 	"errors"
 
 	"github.com/jackc/pgx/v5"
-	eventmodel "github.com/sashapremium/events/internal/models"
+	eventmodel "github.com/sashapremium/events/events/internal/models"
 )
 
 var ErrPostNotFound = errors.New("post not found")

@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"time"
 
-	eventmodel "github.com/sashapremium/events/internal/models"
-	pbmodels "github.com/sashapremium/events/internal/pb/models"
+	eventmodel "github.com/sashapremium/events/events/internal/models"
+	pbmodels "github.com/sashapremium/events/events/internal/pb/models"
 )
 
 func (s *Service) GetPost(ctx context.Context, id uint64) (*eventmodel.PostInfo, error) {

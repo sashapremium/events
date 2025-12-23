@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	eventmodel "github.com/sashapremium/events/internal/models"
-	"github.com/sashapremium/events/internal/services/eventsService/mocks"
+	eventmodel "github.com/sashapremium/events/events/internal/models"
+	"github.com/sashapremium/events/events/internal/services/eventsService/mocks"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
 )

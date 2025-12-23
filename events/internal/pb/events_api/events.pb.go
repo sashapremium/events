@@ -7,7 +7,7 @@
 package events_api
 
 import (
-	models "github.com/sashapremium/events/internal/pb/models"
+	models "github.com/sashapremium/events/events/internal/pb/models"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"

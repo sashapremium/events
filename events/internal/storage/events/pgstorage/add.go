@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	eventmodel "github.com/sashapremium/events/internal/models"
+	eventmodel "github.com/sashapremium/events/events/internal/models"
 )
 
 func (s *PGStorage) InsertEvents(ctx context.Context, events []*eventmodel.ContentEvent) error {

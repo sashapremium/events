@@ -3,7 +3,7 @@ package contenteventsprocessor
 import (
 	"context"
 
-	"github.com/sashapremium/events/internal/models"
+	"github.com/sashapremium/events/events/internal/models"
 )
 
 type analyticsService interface {
@@ -11,10 +11,4 @@ type analyticsService interface {
 }
 type ContentEventsProcessor struct {
 	analyticsService analyticsService
-}
-
-func NewContentEventsProcessor(analyticsService analyticsService) *ContentEventsProcessor {
-	return &ContentEventsProcessor{
-		analyticsService: analyticsService,
-	}
 }

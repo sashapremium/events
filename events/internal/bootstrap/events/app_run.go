@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/sashapremium/events/config"
-	"github.com/sashapremium/events/internal/pb/events_api"
+	"github.com/sashapremium/events/events/config"
+	"github.com/sashapremium/events/events/internal/pb/events_api"
 	"google.golang.org/grpc"
 )
 

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/sashapremium/events/config"
-	"github.com/sashapremium/events/internal/storage/events/pgstorage"
+	"github.com/sashapremium/events/events/config"
+	"github.com/sashapremium/events/events/internal/storage/events/pgstorage"
 )
 
 func InitPGStorage(cfg *config.Config) *pgstorage.PGStorage {

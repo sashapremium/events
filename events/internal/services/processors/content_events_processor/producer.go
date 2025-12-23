@@ -1,11 +1,11 @@
-package producer
+package contenteventsprocessor
 
 import (
 	"context"
 	"fmt"
 	"time"
 
-	"github.com/sashapremium/events/config"
+	"github.com/sashapremium/events/events/config"
 	"github.com/segmentio/kafka-go"
 )
 

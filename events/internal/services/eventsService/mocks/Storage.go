@@ -4,7 +4,7 @@ package mocks
 import (
 	context "context"
 
-	events "github.com/sashapremium/events/internal/models"
+	events "github.com/sashapremium/events/events/internal/models"
 	mock "github.com/stretchr/testify/mock"
 )
 

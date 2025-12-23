@@ -4,9 +4,9 @@ import (
 	"context"
 	"encoding/json"
 
-	kproducer "github.com/sashapremium/events/internal/kafka/producer"
-	eventmodel "github.com/sashapremium/events/internal/models"
-	"github.com/sashapremium/events/internal/services/eventsService"
+	eventmodel "github.com/sashapremium/events/events/internal/models"
+	"github.com/sashapremium/events/events/internal/services/eventsService"
+	kproducer "github.com/sashapremium/events/events/internal/services/processors/content_events_processor"
 )
 
 type eventProducerAdapter struct {

@@ -4,8 +4,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/sashapremium/events/config"
-	"github.com/sashapremium/events/internal/bootstrap/events"
+	"github.com/sashapremium/events/events/config"
+	"github.com/sashapremium/events/events/internal/bootstrap/events"
 )
 
 func getenv(key, def string) string {

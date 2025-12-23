@@ -3,7 +3,7 @@ package contenteventsprocessor
 import (
 	"context"
 
-	"github.com/sashapremium/events/internal/models"
+	"github.com/sashapremium/events/events/internal/models"
 )
 
 func (p *ContentEventsProcessor) Handle(ctx context.Context, ev *models.ContentEvent) error {
