@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package analytics.models.v1;
 
-option go_package = "github.com/sashapremium/events/internal/pb/models;models";
+option go_package = "github.com/sashapremium/events/analytics/internal/pb/models;models";
 
 
 // Итоговые агрегаты по посту
@@ -28,7 +28,7 @@ message PostStatsModel {
   uint64 post_id = 1;
   TotalsModel totals = 2;
   FreshTailModel fresh_tail = 3;
-  string last_synced_at = 4;
+  string last_synced_at = 4; // RFC3339
 }
 
 // Элемент топа

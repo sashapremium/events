@@ -175,7 +175,6 @@ func (x *FreshTailModel) GetUniqueUsers() int64 {
 	return 0
 }
 
-//Cстатистика по посту
 type PostStatsModel struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	PostId        uint64                 `protobuf:"varint,1,opt,name=post_id,json=postId,proto3" json:"post_id,omitempty"`
@@ -297,7 +296,6 @@ func (x *TopItemModel) GetValue() int64 {
 	return 0
 }
 
-//Топ постов
 type TopModel struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Metric        string                 `protobuf:"bytes,1,opt,name=metric,proto3" json:"metric,omitempty"` // просмотр, комментарии, лайки
@@ -350,7 +348,6 @@ func (x *TopModel) GetItems() []*TopItemModel {
 	return nil
 }
 
-//Аналитика по автору
 type AuthorStatsModel struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	AuthorId      string                 `protobuf:"bytes,1,opt,name=author_id,json=authorId,proto3" json:"author_id,omitempty"`
