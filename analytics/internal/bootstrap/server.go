@@ -18,10 +18,9 @@ import (
 )
 
 const (
-	grpcListenAddr = ":50052"
-	grpcDialAddr   = "localhost:50052"
-	httpAddr       = ":8082"
-
+	grpcListenAddr     = ":50052"
+	grpcDialAddr       = "localhost:50052"
+	httpAddr           = ":8082"
 	defaultSwaggerPath = "/swagger/analytics.swagger.json"
 	swaggerEnv         = "swaggerPath"
 )
@@ -32,6 +31,7 @@ type Consumer interface {
 
 func AppRun(apiSrv analytics_api.AnalyticsServiceServer, consumer Consumer) {
 	go func() {
+		slog.Info("analytics consumer starting")
 		consumer.Consume(context.Background())
 	}()
 

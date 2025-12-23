@@ -10,7 +10,7 @@ postgres:
 
 kafka:
   brokers:
-    - kafka:9092
+    - kafka:29092
   topic: content_events
 
 http:
