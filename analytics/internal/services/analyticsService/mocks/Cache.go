@@ -2,7 +2,9 @@ package mocks
 
 import (
 	"context"
+	"time"
 
+	analyticsmodels "github.com/sashapremium/events/analytics/internal/pb/models"
 	"github.com/sashapremium/events/analytics/internal/services/analyticsService"
 )
 
@@ -23,6 +25,9 @@ type CacheMock struct {
 
 	SetLastSyncedAtFunc func(ctx context.Context, ts string) error
 	GetLastSyncedAtFunc func(ctx context.Context) (string, bool, error)
+
+	GetAuthorStatsFunc func(ctx context.Context, authorID uint64) (*analyticsmodels.AuthorStatsModel, bool, error)
+	SetAuthorStatsFunc func(ctx context.Context, authorID uint64, v *analyticsmodels.AuthorStatsModel, ttl time.Duration) error
 }
 
 func (m *CacheMock) GetTotals(ctx context.Context, postID uint64) (analyticsService.PostTotals, bool, error) {
@@ -99,4 +104,18 @@ func (m *CacheMock) IncrTotals(ctx context.Context, postID uint64, delta analyti
 		return nil
 	}
 	return m.IncrTotalsFunc(ctx, postID, delta)
+}
+
+func (m *CacheMock) GetAuthorStats(ctx context.Context, authorID uint64) (*analyticsmodels.AuthorStatsModel, bool, error) {
+	if m.GetAuthorStatsFunc != nil {
+		return m.GetAuthorStatsFunc(ctx, authorID)
+	}
+	return nil, false, nil
+}
+
+func (m *CacheMock) SetAuthorStats(ctx context.Context, authorID uint64, v *analyticsmodels.AuthorStatsModel, ttl time.Duration) error {
+	if m.SetAuthorStatsFunc != nil {
+		return m.SetAuthorStatsFunc(ctx, authorID, v, ttl)
+	}
+	return nil
 }
